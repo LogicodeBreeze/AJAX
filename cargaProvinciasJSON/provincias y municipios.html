@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title> Provincias y Municipios</title>
+</head>
+<body>
+  <h2>Selecciona</h2>
+
+  <label for="provincias">Provincia:</label>
+  <select id="provincias">
+    <option value="">Selecciona una provincia</option>
+  </select>
+
+  <label for="municipios">Municipio:</label>
+  <select id="municipios">
+    <option value="">Selecciona un municipio</option>
+  </select>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      cargarProvincias();
+
+    document.getElementById("provincias").addEventListener("change", function() {
+      console.log("hola");
+      let idProvincia = this.value;
+      if (idProvincia) {
+        cargarMunicipios(idProvincia);
+      } else {
+        document.getElementById("municipios").innerHTML = '<option value="">-- Selecciona un municipio --</option>';
+      }
+    });
+
+
+    });
+
+    // Función para cargar provincias desde cargaProvinciasJSON.php
+    function cargarProvincias() {
+      fetch("cargaProvinciasJSON.php")
+        .then(response => response.json())
+        .then(data => {
+          let selectProvincias = document.getElementById("provincias");
+    
+          selectProvincias.innerHTML = '<option value="">-- Selecciona una provincia --</option>';
+
+
+          Object.entries(data).forEach(provincia => {
+            let option = document.createElement("option");
+            option.value = provincia[0];   // suponiendo que el JSON tiene {id, nombre}
+            option.textContent = provincia[1];
+            selectProvincias.appendChild(option);
+          });
+        })
+        .catch(error => console.error("Error cargando provincias:", error));
+    }
+
+    // Función para cargar municipios desde cargaMunicipiosJSON.php
+    function cargarMunicipios(idProvincia) {
+
+console.log(idProvincia);
+
+      fetch("cargaMunicipiosJSON.php?provincia=" + idProvincia)
+        .then(response => response.json())
+        .then(data => {
+          let selectMunicipios = document.getElementById("municipios");
+      
+          selectMunicipios.innerHTML = '<option value="">-- Selecciona un municipio --</option>';
+   
+
+console.log(data);
+
+      Object.entries(data).forEach(municipio => {
+            let option = document.createElement("option");
+            option.value = municipio[0];   
+            option.textContent = municipio[1];
+            selectMunicipios.appendChild(option);
+          });
+        })
+    }
+
+
+
+  </script>
+</body>
+</html>
