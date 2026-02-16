@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Quiz OpenTDB</title>
+</head>
+<body>
+
+<h2>Pregunta</h2>
+<p id="textoPregunta"></p>
+
+<div id="contenedorRespuestas"></div>
+
+<p id="mensaje"></p>
+
+<script>
+
+function cargarPregunta() {
+  fetch("https://opentdb.com/api.php?amount=1&type=multiple")
+    .then(respuesta => respuesta.json())
+    .then(datos => {
+
+      const pregunta = datos.results[0];
+
+      document.getElementById("textoPregunta").innerHTML = pregunta.question;
+      document.getElementById("mensaje").textContent = "";
+
+      let respuestas = [...pregunta.incorrect_answers];
+      respuestas.push(pregunta.correct_answer);
+
+      respuestas.sort(() => Math.random() - 0.5);
+
+      const contenedor = document.getElementById("contenedorRespuestas");
+      contenedor.innerHTML = "";
+
+      respuestas.forEach(respuesta => {
+        const boton = document.createElement("button");
+        boton.innerHTML = respuesta;
+
+        boton.onclick = function() {
+          if (respuesta === pregunta.correct_answer) {
+            cargarPregunta();
+          } else {
+            document.getElementById("mensaje").textContent =
+              "Respuesta incorrecta. Inténtalo de nuevo.";
+          }
+        };
+
+        contenedor.appendChild(boton);
+        contenedor.appendChild(document.createElement("br"));
+      });
+
+    });
+}
+
+cargarPregunta();
+
+</script>
+
+</body>
+</html>
