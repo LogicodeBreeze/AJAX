@@ -1,86 +1,85 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title> Provincias y Municipios</title>
+  <meta charset="UTF-8" />
+  <title>Provincias y Municipios</title>
 </head>
 <body>
   <h2>Selecciona</h2>
 
-  <label for="provincias">Provincia:</label>
-  <select id="provincias">
-    <option value="">Selecciona una provincia</option>
+  <label for="selectProvincias">Provincia:</label>
+  <select id="selectProvincias">
+    <option value="">-- Selecciona una provincia --</option>
   </select>
 
-  <label for="municipios">Municipio:</label>
-  <select id="municipios">
-    <option value="">Selecciona un municipio</option>
+  <label for="selectMunicipios">Municipio:</label>
+  <select id="selectMunicipios">
+    <option value="">-- Selecciona un municipio --</option>
   </select>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
       cargarProvincias();
 
-    document.getElementById("provincias").addEventListener("change", function() {
-      console.log("hola");
-      let idProvincia = this.value;
-      if (idProvincia) {
-        cargarMunicipios(idProvincia);
-      } else {
-        document.getElementById("municipios").innerHTML = '<option value="">-- Selecciona un municipio --</option>';
-      }
+      document.getElementById("selectProvincias").addEventListener("change", function () {
+        const idProvinciaSeleccionada = this.value;
+
+        if (idProvinciaSeleccionada) {
+          cargarMunicipiosDeProvincia(idProvinciaSeleccionada);
+        } else {
+          limpiarMunicipios();
+        }
+      });
     });
 
-
-    });
-
-    // Función para cargar provincias desde cargaProvinciasJSON.php
     function cargarProvincias() {
       fetch("cargaProvinciasJSON.php")
-        .then(response => response.json())
-        .then(data => {
-          let selectProvincias = document.getElementById("provincias");
-    
+        .then(respuesta => respuesta.json())
+        .then(provincias => {
+          const selectProvincias = document.getElementById("selectProvincias");
           selectProvincias.innerHTML = '<option value="">-- Selecciona una provincia --</option>';
 
-
-          Object.entries(data).forEach(provincia => {
-            let option = document.createElement("option");
-            option.value = provincia[0];   // suponiendo que el JSON tiene {id, nombre}
-            option.textContent = provincia[1];
-            selectProvincias.appendChild(option);
+          Object.entries(provincias).forEach(([idProvincia, nombreProvincia]) => {
+            const opcionProvincia = document.createElement("option");
+            opcionProvincia.value = idProvincia;
+            opcionProvincia.textContent = nombreProvincia;
+            selectProvincias.appendChild(opcionProvincia);
           });
+
+          limpiarMunicipios();
         })
         .catch(error => console.error("Error cargando provincias:", error));
     }
 
-    // Función para cargar municipios desde cargaMunicipiosJSON.php
-    function cargarMunicipios(idProvincia) {
+    function cargarMunicipiosDeProvincia(idProvincia) {
+      const datosFormulario = new FormData();
+      // IMPORTANTE: tu PHP lee $_POST["provincia"], por eso la clave debe llamarse "provincia"
+      datosFormulario.append("provincia", idProvincia);
 
-console.log(idProvincia);
-
-      fetch("cargaMunicipiosJSON.php?provincia=" + idProvincia)
-        .then(response => response.json())
-        .then(data => {
-          let selectMunicipios = document.getElementById("municipios");
-      
+      fetch("cargaMunicipiosJSON.php", {
+        method: "POST",
+        body: datosFormulario
+      })
+        .then(respuesta => respuesta.json())
+        .then(municipios => {
+          const selectMunicipios = document.getElementById("selectMunicipios");
+          selectMunicipios.disabled = false;
           selectMunicipios.innerHTML = '<option value="">-- Selecciona un municipio --</option>';
-   
 
-console.log(data);
-
-      Object.entries(data).forEach(municipio => {
-            let option = document.createElement("option");
-            option.value = municipio[0];   
-            option.textContent = municipio[1];
-            selectMunicipios.appendChild(option);
+          Object.entries(municipios).forEach(([idMunicipio, nombreMunicipio]) => {
+            const opcionMunicipio = document.createElement("option");
+            opcionMunicipio.value = idMunicipio;
+            opcionMunicipio.textContent = nombreMunicipio;
+            selectMunicipios.appendChild(opcionMunicipio);
           });
         })
+        .catch(error => {
+          console.error("Error cargando municipios:", error);
+          limpiarMunicipios();
+        });
     }
 
-
-
+  
   </script>
 </body>
 </html>
