@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>航天新闻资讯 </title>
+    <style>
+        body { font-family: -apple-system, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 700px; margin: 0 auto; }
+        
+        /* 搜索框 */
+        .search-area { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; display: flex; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; outline: none; }
+        button { padding: 10px 20px; background: #007aff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        
+        /* 新闻卡片 */
+        .news-card { background: white; border-radius: 12px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: 0.3s; }
+        .news-card:hover { transform: translateY(-3px); }
+        .news-card img { width: 100%; height: 200px; object-fit: cover; }
+        .news-content { padding: 20px; }
+        .news-title { font-size: 1.2rem; font-weight: bold; margin: 0 0 10px 0; color: #1d1d1f; }
+        .news-summary { font-size: 0.95rem; color: #666; line-height: 1.5; }
+        .news-meta { font-size: 0.8rem; color: #999; margin-top: 15px; }
+
+        /* 加载更多 */
+        .footer { text-align: center; margin: 30px 0; }
+        #loadMoreBtn { background: white; color: #007aff; border: 1.5px solid #007aff; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="search-area">
+        <input type="text" id="searchInput" placeholder="搜索航天关键词 (英文，如: Moon, SpaceX)">
+        <button onclick="startSearch()">搜索</button>
+    </div>
+
+    <div id="newsList"></div>
+
+    <div class="footer">
+        <p id="statusTip">输入关键词，探索宇宙资讯</p>
+        <button id="loadMoreBtn" class="hidden" onclick="loadMore()">加载更多</button>
+    </div>
+</div>
+
+<script>
+  
+    let currentLimit = 5;       // 每次加载多少条
+    let currentOffset = 0;      // 跳过多少条（用于分页）
+    let currentKeyword = "";    // 记录当前的搜索词
+
+    const newsListDiv = document.getElementById('newsList');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    const statusTip = document.getElementById('statusTip');
+
+    // 动作1：点击搜索按钮
+    async function startSearch() {
+        const inputVal = document.getElementById('searchInput').value.trim();
+        if (!inputVal) return alert("请输入关键词");
+
+        currentKeyword = inputVal;
+        currentOffset = 0; // 重新搜索，从头开始
+        newsListDiv.innerHTML = ""; // 清空列表
+        await fetchNews();
+    }
+
+    // 动作2：核心获取数据
+    async function fetchNews() {
+        try {
+            statusTip.innerText = "正在穿越大气层获取资讯...";
+            loadMoreBtn.classList.add('hidden');
+
+            // 这个 API 不需要 Key！直接 fetch 即可
+            const url = `https://api.spaceflightnewsapi.net/v4/articles/?title_contains=${currentKeyword}&limit=${currentLimit}&offset=${currentOffset}`;
+            
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (data.results.length === 0) {
+                statusTip.innerText = "未找到相关新闻，换个词试试？";
+                return;
+            }
+
+            renderItems(data.results);
+
+            statusTip.innerText = "";
+            loadMoreBtn.classList.remove('hidden');
+
+        } catch (error) {
+            statusTip.innerText = "信号丢失：无法连接到卫星服务";
+            console.error(error);
+        }
+    }
+
+    // 动作3：把数据画在页面上
+    function renderItems(articles) {
+        articles.forEach(item => {
+            const html = `
+                <div class="news-card">
+                    <img src="${item.image_url}" alt="news cover">
+                    <div class="news-content">
+                        <h3 class="news-title">${item.title}</h3>
+                        <p class="news-summary">${item.summary.substring(0, 100)}...</p>
+                        <div class="news-meta">
+                            发布自: ${item.news_site} | ${new Date(item.published_at).toLocaleDateString()}
+                        </div>
+                        <br>
+                        <a href="${item.url}" target="_blank" style="color:#007aff; text-decoration:none; font-weight:bold;">阅读全文 →</a>
+                    </div>
+                </div>
+            `;
+            newsListDiv.insertAdjacentHTML('beforeend', html);
+        });
+    }
+
+    // 动作4：加载更多
+    async function loadMore() {
+        currentOffset += currentLimit; // 增加偏移量，获取下一组
+        await fetchNews();
+    }
+</script>
+
+</body>
+</html>
