@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Galería de Mascotas</title>
+ <style>
+    body {
+  text-align: center;
+  font-family: Arial;
+}
+
+img {
+  width: 300px;
+  border-radius: 10px;
+}
+
+#historial img {
+  width: 100px;
+  margin: 5px;
+}
+ </style>
+</head>
+<body>
+
+  <h1>🐱🐶 Galería de gatito y perritos</h1>
+
+  <select id="tipo">
+    <option value="gato">Gatos</option>
+    <option value="perro">Perros</option>
+  </select>
+
+  <br><br>
+
+  <button id="cargar">Cargar imagen</button>
+
+  <br><br>
+
+  <img id="imagen" src="" alt="mascota">
+
+  <h3>Historial</h3>
+  <div id="historial"></div>
+
+ <script>
+    function cargarImagen() {
+
+  let tipo = document.getElementById("tipo").value;
+  let url = "";
+
+  if (tipo === "gato") {
+    url = "https://api.thecatapi.com/v1/images/search";
+  } else {
+    url = "https://dog.ceo/api/breeds/image/random";
+  }
+
+  fetch(url)
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(data) {
+
+      let imagen;
+
+      if (tipo === "gato") {
+        imagen = data[0].url;
+      } else {
+        imagen = data.message;
+      }
+
+      document.getElementById("imagen").src = imagen;
+
+      let img = document.createElement("img");
+      img.src = imagen;
+
+      document.getElementById("historial").appendChild(img);
+    });
+}
+
+document.getElementById("cargar").addEventListener("click", function() {
+  cargarImagen();
+});
+ </script>
+
+</body>
+</html>
