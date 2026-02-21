@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Países del Mundo</title>
+  <style>
+    body {
+  text-align: center;
+  font-family: Arial;
+}
+
+img {
+  width: 200px;
+  margin-top: 10px;
+}
+
+#resultado {
+  margin-top: 20px;
+}
+  </style>
+</head>
+<body>
+
+  <h1> Buscador de Países</h1>
+
+  <input type="text" id="pais" placeholder="Escribe un país">
+  <button id="buscar">Buscar</button>
+
+  <div id="resultado"></div>
+
+  <script>
+
+    function buscarPais() {
+
+  let nombre = document.getElementById("pais").value;
+
+  fetch("https://restcountries.com/v3.1/name/" + nombre)
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(data) {
+
+      let pais = data[0];
+
+      let bandera = pais.flags.png;
+      let capital = pais.capital[0];
+      let poblacion = pais.population;
+      let region = pais.region;
+
+      let idioma = Object.values(pais.languages)[0];
+
+      let html =
+        "<h2>" + pais.name.common + "</h2>" +
+        "<img src='" + bandera + "'>" +
+        "<p>Capital: " + capital + "</p>" +
+        "<p>Población: " + poblacion + "</p>" +
+        "<p>Región: " + region + "</p>" +
+        "<p>Idioma: " + idioma + "</p>";
+
+      document.getElementById("resultado").innerHTML = html;
+    });
+}
+
+document.getElementById("buscar").addEventListener("click", function() {
+  buscarPais();
+});
+  </script>
+
+</body>
+</html>
