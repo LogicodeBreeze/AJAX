@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Conversor de monedas</title>
+
+<style>
+body {
+    font-family: Arial;
+    text-align: center;
+    background: #f5f5f5;
+}
+
+.container {
+    background: white;
+    padding: 20px;
+    width: 350px;
+    margin: 40px auto;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+input, select, button {
+    margin: 8px;
+    padding: 8px;
+    width: 80%;
+}
+
+button {
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+#resultado {
+    margin-top: 15px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.historial {
+    margin-top: 20px;
+    text-align: left;
+    font-size: 14px;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h2>Conversor de monedas</h2>
+
+<input type="number" id="cantidad" placeholder="Cantidad">
+
+<select id="origen">
+<option value="EUR">EUR €</option>
+<option value="USD">USD $</option>
+<option value="CNY">CNY ¥</option>
+<option value="JPY">JPY ¥</option>
+</select>
+
+<select id="destino">
+<option value="USD">USD $</option>
+<option value="EUR">EUR €</option>
+<option value="CNY">CNY ¥</option>
+<option value="JPY">JPY ¥</option>
+</select>
+
+<button id="convertir">Convertir</button>
+
+<div id="resultado"></div>
+
+<div class="historial">
+<h4>Historial</h4>
+<ul id="lista"></ul>
+</div>
+
+</div>
+
+<script>
+var boton = document.getElementById("convertir");
+var resultado = document.getElementById("resultado");
+var lista = document.getElementById("lista");
+var input = document.getElementById("cantidad");
+
+boton.addEventListener("click", convertir);
+input.addEventListener("input", convertir);
+
+cargarHistorial();
+
+function convertir() {
+
+    var cantidad = input.value;
+    var origen = document.getElementById("origen").value;
+    var destino = document.getElementById("destino").value;
+
+    if (cantidad == "" || cantidad <= 0) {
+        resultado.textContent = "";
+        return;
+    }
+
+    resultado.textContent = "Cargando...";
+
+    var url = "https://api.exchangerate-api.com/v4/latest/" + origen;
+
+    fetch(url)
+    .then(function(respuesta) {
+        return respuesta.json();
+    })
+    .then(function(datos) {
+
+        var tasa = datos.rates[destino];
+
+        if (!tasa) {
+            resultado.textContent = "Error";
+            return;
+        }
+
+        var total = cantidad * tasa;
+
+        resultado.textContent =
+            cantidad + " " + origen +
+            " = " + total.toFixed(2) + " " + destino;
+
+        guardarHistorial(cantidad, origen, destino, total);
+    })
+    .catch(function() {
+        resultado.textContent = "Error de conexión";
+    });
+}
+
+function guardarHistorial(cantidad, origen, destino, total) {
+
+    var historial = JSON.parse(localStorage.getItem("historial")) || [];
+
+    historial.unshift(
+        cantidad + " " + origen +
+        " → " + total.toFixed(2) + " " + destino
+    );
+
+    if (historial.length > 5) {
+        historial.pop();
+    }
+
+    localStorage.setItem("historial", JSON.stringify(historial));
+
+    mostrarHistorial(historial);
+}
+
+function cargarHistorial() {
+    var historial = JSON.parse(localStorage.getItem("historial")) || [];
+    mostrarHistorial(historial);
+}
+
+function mostrarHistorial(historial) {
+
+    lista.innerHTML = "";
+
+    for (var i = 0; i < historial.length; i++) {
+
+        var li = document.createElement("li");
+        li.textContent = historial[i];
+        lista.appendChild(li);
+    }
+}
+</script>
+
+</body>
+</html>
