@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscador de usuarios</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>Buscador de usuarios</h1>
+
+    <button id="cargar">Cargar usuarios</button>
+
+    <div id="usuarios"></div>
+
+    <script>
+        var boton = document.getElementById("cargar");
+var contenedor = document.getElementById("usuarios");
+
+boton.addEventListener("click", cargarUsuarios);
+
+function cargarUsuarios() {
+
+    fetch("https://randomuser.me/api/?results=5")
+        .then(function(respuesta) {
+            return respuesta.json();
+        })
+        .then(function(datos) {
+            mostrarUsuarios(datos.results);
+        })
+        .catch(function(error) {
+            console.log("Error:", error);
+        });
+}
+
+function mostrarUsuarios(lista) {
+
+    for (var i = 0; i < lista.length; i++) {
+
+        var usuario = lista[i];
+
+        var div = document.createElement("div");
+        div.className = "usuario";
+
+        var nombre = document.createElement("h3");
+        nombre.textContent = usuario.name.first + " " + usuario.name.last;
+
+        var email = document.createElement("p");
+        email.textContent = usuario.email;
+
+        var imagen = document.createElement("img");
+        imagen.src = usuario.picture.medium;
+
+        div.appendChild(imagen);
+        div.appendChild(nombre);
+        div.appendChild(email);
+
+        contenedor.appendChild(div);
+    }
+}
+    </script>
+</body>
+</html>
