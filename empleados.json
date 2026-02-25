@@ -1,0 +1,188 @@
+[
+  {
+    "empleado_id": 101,
+    "nombre": "Sofía Navarro",
+    "edad": 33,
+    "puesto": "Desarrolladora",
+    "departamento": "IT",
+    "manager": "Marcos Vidal",
+    "contacto": {
+      "email": "sofia.navarro@empresa.com",
+      "telefono": "+34-600-111-101"
+    },
+    "direccion": {
+      "calle": "Calle Gran Vía 12",
+      "ciudad": "Madrid",
+      "codigo_postal": "28013",
+      "pais": "España"
+    },
+    "familia": [
+      {
+        "relacion": "Pareja",
+        "nombre": "Javier Navarro",
+        "edad": 35,
+        "contacto": {
+          "email": "javier.navarro@familia.com",
+          "telefono": "+34-600-211-101"
+        }
+      }
+    ],
+    "historial_laboral": [
+      {
+        "empresa": "TechNova",
+        "rol": "Desarrolladora Junior",
+        "duracion": "1 año"
+      },
+      {
+        "empresa": "BlueWave",
+        "rol": "Desarrolladora",
+        "duracion": "2 años"
+      }
+    ],
+    "proyectos": [
+      {
+        "proyecto_id": "PR-10",
+        "nombre": "Portal de Clientes",
+        "estado": "En progreso",
+        "tareas": [
+          {
+            "tarea_id": "TS-1001",
+            "descripcion": "Crear sistema de login",
+            "estado": "En progreso",
+            "subtareas": [
+              {
+                "subtarea_id": "ST-1001-1",
+                "nombre": "Validación de formulario",
+                "estado": "Completado"
+              },
+              {
+                "subtarea_id": "ST-1001-2",
+                "nombre": "Almacenamiento de token",
+                "estado": "En progreso"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "empleado_id": 102,
+    "nombre": "Iván Romero",
+    "edad": 41,
+    "puesto": "Analista",
+    "departamento": "Finanzas",
+    "manager": "Lucía Pérez",
+    "contacto": {
+      "email": "ivan.romero@empresa.com",
+      "telefono": "+34-600-111-102"
+    },
+    "direccion": {
+      "calle": "Av. Diagonal 220",
+      "ciudad": "Barcelona",
+      "codigo_postal": "08018",
+      "pais": "España"
+    },
+    "familia": [
+      {
+        "relacion": "Hija",
+        "nombre": "Nora Romero",
+        "edad": 9,
+        "contacto": {
+          "email": "nora.romero@familia.com",
+          "telefono": "+34-600-211-102"
+        }
+      }
+    ],
+    "historial_laboral": [
+      {
+        "empresa": "FinCore",
+        "rol": "Analista de Datos",
+        "duracion": "3 años"
+      }
+    ],
+    "proyectos": [
+      {
+        "proyecto_id": "PR-20",
+        "nombre": "Previsión de Presupuesto",
+        "estado": "En pausa",
+        "tareas": [
+          {
+            "tarea_id": "TS-2001",
+            "descripcion": "Recopilar datos de departamentos",
+            "estado": "Pendiente",
+            "subtareas": [
+              {
+                "subtarea_id": "ST-2001-1",
+                "nombre": "Recoger datos de ventas",
+                "estado": "En progreso"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "empleado_id": 103,
+    "nombre": "Marta Salas",
+    "edad": 29,
+    "puesto": "Diseñadora",
+    "departamento": "Marketing",
+    "manager": "Marcos Vidal",
+    "contacto": {
+      "email": "marta.salas@empresa.com",
+      "telefono": "+34-600-111-103"
+    },
+    "direccion": {
+      "calle": "Calle Larios 5",
+      "ciudad": "Málaga",
+      "codigo_postal": "29005",
+      "pais": "España"
+    },
+    "familia": [
+      {
+        "relacion": "Hermana",
+        "nombre": "Paula Salas",
+        "edad": 26,
+        "contacto": {
+          "email": "paula.salas@familia.com",
+          "telefono": "+34-600-211-103"
+        }
+      }
+    ],
+    "historial_laboral": [
+      {
+        "empresa": "AdSpark",
+        "rol": "Diseñadora Junior",
+        "duracion": "2 años"
+      }
+    ],
+    "proyectos": [
+      {
+        "proyecto_id": "PR-30",
+        "nombre": "Renovación de Marca",
+        "estado": "En progreso",
+        "tareas": [
+          {
+            "tarea_id": "TS-3001",
+            "descripcion": "Actualizar propuestas de logo",
+            "estado": "En progreso",
+            "subtareas": [
+              {
+                "subtarea_id": "ST-3001-1",
+                "nombre": "Bocetos iniciales",
+                "estado": "Completado"
+              },
+              {
+                "subtarea_id": "ST-3001-2",
+                "nombre": "Definir paleta de colores",
+                "estado": "En progreso"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
