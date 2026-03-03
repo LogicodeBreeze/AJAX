@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Datos y Chistes</title>
+<style>
+  body {
+    margin:0;
+    font-family: Arial, sans-serif;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+    color:#111;
+    text-align:center;
+  }
+
+  h1 {
+    margin-bottom:20px;
+  }
+
+  button {
+    background:#fff;
+    border:2px solid #4ade80;
+    color:#4ade80;
+    font-size:16px;
+    padding:10px 20px;
+    margin:10px;
+    border-radius:8px;
+    cursor:pointer;
+    transition: all 0.2s ease;
+  }
+
+  button:hover {
+    background:#4ade80;
+    color:#fff;
+  }
+
+  p {
+    font-size:18px;
+    margin:15px 0;
+    max-width:600px;
+    line-height:1.5;
+    transition: opacity 0.3s ease;
+  }
+
+  p.show {
+    opacity:1;
+  }
+
+  p.hide {
+    opacity:0;
+  }
+</style>
+</head>
+<body>
+
+<h1>Datos Curiosos y Chistes </h1>
+
+<button id="funFactBtn">Dato Curioso</button>
+<p id="funFact" class="hide">Aquí aparecerá un dato curioso...</p>
+
+<button id="jokeBtn">Chiste</button>
+<p id="joke" class="hide">Aquí aparecerá un chiste...</p>
+
+<script>
+const funFactBtn = document.getElementById('funFactBtn');
+const funFactP = document.getElementById('funFact');
+const jokeBtn = document.getElementById('jokeBtn');
+const jokeP = document.getElementById('joke');
+
+// Función para mostrar texto con efecto
+function showText(el, text){
+  el.classList.remove('show');
+  el.classList.add('hide');
+  setTimeout(()=>{
+    el.textContent = text;
+    el.classList.remove('hide');
+    el.classList.add('show');
+  }, 100);
+}
+
+// Datos curiosos
+funFactBtn.addEventListener('click', async ()=>{
+  try{
+    const res = await fetch('https://uselessfacts.jsph.pl/random.json?language=es');
+    const data = await res.json();
+    showText(funFactP, data.text);
+  }catch(e){
+    showText(funFactP, 'Error al cargar el dato curioso');
+    console.error(e);
+  }
+});
+
+// Chistes
+jokeBtn.addEventListener('click', async ()=>{
+  try{
+    const res = await fetch('https://v2.jokeapi.dev/joke/Any?lang=es&type=single');
+    const data = await res.json();
+    showText(jokeP, data.joke);
+  }catch(e){
+    showText(jokeP, 'Error al cargar el chiste');
+    console.error(e);
+  }
+});
+</script>
+
+</body>
+</html>
