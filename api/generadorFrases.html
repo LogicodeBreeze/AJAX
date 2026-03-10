@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Generador de frases</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#f3f3f3;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.card{
+background:white;
+padding:30px;
+width:400px;
+border-radius:10px;
+text-align:center;
+box-shadow:0 5px 20px rgba(0,0,0,0.2);
+}
+
+button{
+padding:10px 20px;
+background:#4CAF50;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+button:hover{
+background:#45a049;
+}
+
+.quote{
+margin:20px 0;
+font-size:18px;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="card">
+
+<h2>Generador de frases 💬</h2>
+
+<div class="quote" id="quote">
+Pulsa el botón para generar una frase
+</div>
+
+<button onclick="generarFrase()">
+Nueva frase
+</button>
+
+</div>
+
+<script>
+
+function generarFrase(){
+
+fetch("https://api.adviceslip.com/advice")
+
+.then(response => response.json())
+
+.then(data => {
+
+document.getElementById("quote").innerText =
+data.slip.advice;
+
+})
+
+.catch(error => {
+
+document.getElementById("quote").innerText =
+"Error al cargar la frase";
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
